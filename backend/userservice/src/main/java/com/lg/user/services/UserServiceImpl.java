@@ -1,5 +1,7 @@
 package com.lg.user.services;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.BeanUtils;
@@ -52,6 +54,22 @@ public class UserServiceImpl implements UserService {
 			}
 		}
 		return null;
+	}
+
+	@Override
+	public List<User> getUsers() {
+		// TODO Auto-generated method stub
+		List<UserEntity> users = userRepo.findAll();
+		List<User> u=new ArrayList<>();
+		User us=new User();
+		for(UserEntity i:users)
+		{
+			BeanUtils.copyProperties(i, us);
+			u.add(us);
+			
+			
+		}
+		return u;
 	}
 
 }

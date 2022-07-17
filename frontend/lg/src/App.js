@@ -9,6 +9,10 @@ import ContributorLogin from "./Components/ContributorLogin";
 import ContributorHome from "./Components/ContributorHome";
 import ContributorSignup from "./Components/ContributorSignup";
 import ContributorAdd from "./Components/ContributorAdd";
+import Adminlogin from "./Components/Adminlogin";
+import AdminHome from "./Components/AdminHome";
+
+
 
 function App() {
   return (
@@ -22,8 +26,8 @@ function App() {
           <Route path="/user/homepage" element={<UserCourses />}></Route>
           <Route path="/user/about" element={<About />}></Route>
 
-          {/* <Route path="/admin/login" element={<Admin />}></Route>
-          <Route path="/admin/homepage" element={<AdminHome />}></Route> */}
+          <Route path="/admin/login" element={<Adminlogin />}></Route>
+          <Route path="/admin/homepage" element={<AdminHome />}></Route>
           
           <Route path="/contributor/signup" element={<ContributorSignup />}></Route>
           <Route path="/contributor/login" element={<ContributorLogin />}></Route>

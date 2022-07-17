@@ -58,4 +58,10 @@ public class UserController {
 	public List<Course> getCourses() {
 		return crUser.getAllCourses();
 	}
+	
+	@GetMapping("/users/all")
+	public List<User> getUsers()
+	{
+		return userService.getUsers();
+	}
 }

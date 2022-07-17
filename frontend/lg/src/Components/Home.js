@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import UserService from "../Services/UserService";
+import "./Home.css";
 
 const Home = () => {
   
@@ -45,13 +46,27 @@ const Home = () => {
   };
 
   return (
-    <div>
-      <input type="text" name="username" placeholder="Username" onChange={(e)=>handleChange(e)}></input>
-      <input type="text" name="password" placeholder="Password" onChange={(e)=>handleChange(e)}></input>
-      <button onClick={validateLoginDetails}>Login</button>
+   <div>
+    <div class="main">
+    <form>
+      <h2 >Log in</h2> 
+      <div class="form-group">
+      <input class="form-group" type="text" name="username" placeholder="Username" required="required" onChange={(e)=>handleChange(e)}></input><br></br>
+      </div>
+      <div>
+      <input type="text" name="password" placeholder="Password" required="required" onChange={(e)=>handleChange(e)}></input>
+      </div>
+      <div class="form-group">
+      <button class="btn btn-primary btn-block" onClick={validateLoginDetails}>Login</button>
+      </div>
+      <div class="clearfix">
+            <label class="float-left form-check-label"><input type="checkbox"/> Remember me</label>
+            </div>
       <button onClick={() => navigate("/admin/login")}>Admin</button>
       <button onClick={() => navigate("/contributor/login")}>Contributor</button>
-      <button onClick={() => navigate("/user/signup")}>Signup</button>
+      <button onClick={() => navigate("/user/signup")}>Creat an Account</button>
+      </form>
+      </div>
     </div>
   );
 };

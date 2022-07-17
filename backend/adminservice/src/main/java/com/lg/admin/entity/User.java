@@ -1,26 +1,11 @@
-package com.lg.user.entity;
+package com.lg.admin.entity;
 
-import lombok.Data;
-
-import javax.persistence.*;
-
-@Entity
-@Data
-@Table(name = "users")
-public class UserEntity {
-
-    @Id
-    private String username;
-    private String firstname;
+public class User {
+	private String firstname;
     private String lastname;
     private String email;
-    private String password;
-	public String getUsername() {
-		return username;
-	}
-	public void setUsername(String username) {
-		this.username = username;
-	}
+	private String username;
+	private String password;
 	public String getFirstname() {
 		return firstname;
 	}
@@ -39,22 +24,29 @@ public class UserEntity {
 	public void setEmail(String email) {
 		this.email = email;
 	}
+	public String getUsername() {
+		return username;
+	}
+	public void setUsername(String username) {
+		this.username = username;
+	}
 	public String getPassword() {
 		return password;
 	}
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	public UserEntity(String username, String firstname, String lastname, String email, String password) {
+	public User(String firstname, String lastname, String email, String username, String password) {
 		super();
-		this.username = username;
 		this.firstname = firstname;
 		this.lastname = lastname;
 		this.email = email;
+		this.username = username;
 		this.password = password;
 	}
-	public UserEntity()
+	public User()
 	{
 		
 	}
+
 }
