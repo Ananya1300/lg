@@ -1,10 +1,17 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import ContributorService from "../Services/ContributorService";
 
 const ContributorSignup = () => {
 
     const navigate = useNavigate();
+
+    useEffect(() => {
+        let contributor = localStorage.getItem("contributor");
+        if(contributor && contributor !== null) {
+            navigate("/contributor/login");
+        }
+    }, []);
 
     const [contributor, setContributor] = useState({
         username: "",

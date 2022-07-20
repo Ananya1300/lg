@@ -16,6 +16,10 @@ class UserService {
   getCourses() {
     return axios.get(USER_API_BASE_URL + "/courses/all");
   }
+
+  enrollCourse(id) {
+    return axios.post(USER_API_BASE_URL + "/enroll/" + id);
+  }
 }
 
 export default new UserService();

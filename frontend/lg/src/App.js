@@ -21,10 +21,12 @@ function App() {
         <Navbar />
         <Routes>
           <Route index element={<Home />}></Route>
+
+          <Route path="/about" element={<About />}></Route>
+
           <Route path="/user/login" element={<Home />}></Route>
           <Route path="/user/signup" element={<User />}></Route>
           <Route path="/user/homepage" element={<UserCourses />}></Route>
-          <Route path="/user/about" element={<About />}></Route>
 
           <Route path="/admin/login" element={<Adminlogin />}></Route>
           <Route path="/admin/homepage" element={<AdminHome />}></Route>

@@ -1,16 +1,17 @@
 package com.lg.contributor.services;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.lg.contributor.entity.ContributorEntity;
-import com.lg.contributor.entity.CourseEntity;
-import com.lg.contributor.model.AuthRequest;
+import com.lg.contributor.dto.AuthRequest;
+import com.lg.contributor.dto.CourseAddRequest;
+import com.lg.contributor.dto.CourseAddResponse;
+import com.lg.contributor.dto.CourseEditRequest;
+import com.lg.contributor.dto.CourseEditResponse;
+import com.lg.contributor.dto.UserCoursesResponse;
 import com.lg.contributor.model.Contributor;
 import com.lg.contributor.model.Course;
 import com.lg.contributor.repository.ContributorRepository;
@@ -26,32 +27,21 @@ public class ContributorServiceImpl implements ContributorService {
 	private CourseRepository courseRepository;
 
 	public ContributorServiceImpl() {
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
 	public Contributor createContributor(Contributor contributor) {
-		ContributorEntity ce = new ContributorEntity();
-		BeanUtils.copyProperties(contributor, ce);
-		contributorRepository.save(ce);
+		contributorRepository.save(contributor);
 		return contributor;
 	}
 
 	@Override
-	public Contributor update(String username, Contributor contributor) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public Contributor login(AuthRequest authRequest) {
-		ContributorEntity ce1 = null;
-		Optional<ContributorEntity> c = contributorRepository.findById(authRequest.getUsername());
+		Contributor contributor = null;
+		Optional<Contributor> c = contributorRepository.findById(authRequest.getUsername());
 		if(c.isPresent()) {
-			ce1 = c.get();
-			if(ce1.getPassword().equals(authRequest.getPassword())) {
-				Contributor contributor = new Contributor();
-				BeanUtils.copyProperties(ce1, contributor);
+			contributor = c.get();
+			if(contributor.getPassword().equals(authRequest.getPassword())) {
 				return contributor;
 			}
 		}
@@ -59,30 +49,63 @@ public class ContributorServiceImpl implements ContributorService {
 	}
 
 	@Override
-	public Course addCourse(Course course) {
-		CourseEntity ce = new CourseEntity();
-		BeanUtils.copyProperties(course, ce);
-		courseRepository.save(ce);
-		course.setId(ce.getId());
-		return course;
-	}
-
-	@Override
-	public List<Course> getAllCourses() {
-		List<CourseEntity> courses = courseRepository.findAll();
-		List<Course> allCourses = new ArrayList<Course>();
-		for(CourseEntity ce: courses) {
-			Course c = new Course();
-			BeanUtils.copyProperties(ce, c);
-			c.setId(ce.getId());
-			allCourses.add(c);
+	public CourseAddResponse addCourse(String username, CourseAddRequest car) {
+		Course c = new Course();
+		c.setTitle(car.getTitle());
+		c.setDescription(car.getDescription());
+		c.setEstimatedTime(car.getEstimatedTime());
+		
+		Optional<Contributor> con = contributorRepository.findById(username);
+		if(con.isPresent()) {
+			Contributor cont = con.get();
+			c.setContributor(cont);
+			Course k = courseRepository.save(c);
+			CourseAddResponse cart = new CourseAddResponse();
+			cart.setId(k.getId());
+			cart.setTitle(k.getTitle());
+			cart.setDescription(k.getDescription());
+			cart.setEstimatedTime(k.getEstimatedTime());
+			cart.setUsername(username);
+			return cart;
 		}
-		return allCourses;
+		return null;
+	}
+
+	
+	@Override
+	public CourseEditResponse editCourse(String username, Integer id, CourseEditRequest cer) {
+		Optional<Course> c = courseRepository.findById(id);
+		CourseEditResponse car = null;
+		if(c.isPresent()) {
+			
+			Course t = c.get();
+			t.setTitle(cer.getTitle());
+			t.setDescription(cer.getDescription());
+			t.setEstimatedTime(cer.getEstimatedTime());
+			
+			Course k = courseRepository.save(t);
+			
+			car = new CourseEditResponse();
+			car.setId(k.getId());
+			car.setTitle(k.getTitle());
+			car.setDescription(k.getDescription());
+			car.setEstimatedTime(k.getEstimatedTime());
+			car.setUsername(username);
+
+		}
+		return car;
 	}
 
 	@Override
-	public void removeCourse(Integer id) {
+	public boolean removeCourse(String username, Integer id) {
 		courseRepository.deleteById(id);
+		return true;
+	}
+
+	@Override
+	public List<UserCoursesResponse> getUserCourses(String username) {
+		// TODO Auto-generated method stub
+		return courseRepository.getUserCourses(username);
 	}
 
 }

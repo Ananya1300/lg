@@ -1,72 +1,72 @@
-import React, { Component } from "react";
+import React, { Component, useEffect, useState } from "react";
+import { useNavigate } from "react-router";
 import ContributorService from "../Services/ContributorService";
 import ContributorHomeNav from "./ContributorHomeNav";
 
-export default class ContributorHome extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            courses: []
-        };
-        // this.deleteCourse = this.deleteCourse.bind(this);
-    }
+const ContributorHome = () => {
+    const navigate = useNavigate();
 
-    componentDidMount() {
-        ContributorService.getAllCourses()
+    const [courses, setCourses] = useState(null);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        let contributor = localStorage.getItem("contributor");
+        if(contributor === null) {
+            navigate("/contributor/login");
+        }
+
+        const fetchData = async () => {
+            setLoading(true);
+            try {
+                const response = await ContributorService.getAllCourses();
+                setCourses(response.data);
+            } catch(error) {
+                console.log(error);
+            }
+            setLoading(false);
+        };
+        fetchData();
+    }, []);
+
+    const deleteCourse = (e, id) => {
+        e.preventDefault();
+        ContributorService.deleteCourse(id)
         .then(
             (response) => {
-                console.log(response);
-                this.setState({
-                    courses: response.data
-                })
+                if(courses) {
+                    setCourses((prevElement) => {
+                        return prevElement.filter((course) => course.id !== id);
+                    });
+                }
             }
-        )
-    }
+        );
+    };
 
-    // deleteCourse = (e, id) => {
-    //     e.preventDefault();
-    //     ContributorService.deleteCourse(id)
-    //     .then(
-    //         (response) => {
-    //             if(this.state.courses) {
-    //                 this.setState({
-    //                     courses: response.filter((course) => course.id !== id)
-    //                 })
-    //             }
-    //         }
-    //     )
-    //     .catch(
-    //         (error) => {
-    //             console.log(error);
-    //         }
-    //     );
-    // }
+    return(
+        <div>
+            <ContributorHomeNav />
+            <table>
+                
+                    {!loading && (
+                        <tbody> 
+                            {
+                                courses.map(
+                                    (course) => ( <tr key={course.id}>
+                                        <td>{course.id}</td>
+                                        <td>{course.title}</td>
+                                        <td>{course.description}</td>
+                                        <td>{course.creator}</td>
+                                        <td>{course.estimatedTime}</td>
+                                        <td><button onClick={(e, id) => deleteCourse(e, course.id)}>delete</button></td>
+                                    </tr>)
+                                )
+                            }
+                            </tbody>
+                    )}
+                
+            </table>
+        </div>
+    )
+};
 
-    render() {
-        const {courses} = this.state
-        return(
-            <div>
-                <ContributorHomeNav />
-                <table>
-                    <tbody>
-                        {
-                            courses.map(
-                                function(course) {
-                                    return( <tr key={course.id}>
-                                                <td>{course.id}</td>
-                                                <td>{course.title}</td>
-                                                <td>{course.description}</td>
-                                                <td>{course.creator}</td>
-                                                <td>{course.estimatedTime}</td>
-                                                {/* <td><button onClick={this.deleteCourse(course.id)}>delete</button></td> */}
-                                            </tr>
-                                    )
-                                }
-                            )
-                        }
-                    </tbody>
-                </table>
-            </div>
-        )
-    }
-}
+export default ContributorHome;

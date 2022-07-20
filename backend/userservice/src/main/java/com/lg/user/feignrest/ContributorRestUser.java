@@ -6,9 +6,6 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import com.lg.user.model.Course;
-import com.lg.user.model.User;
-
-
 
 @FeignClient(name = "CONTRIBUTOR-SERVICE")
 public interface ContributorRestUser {

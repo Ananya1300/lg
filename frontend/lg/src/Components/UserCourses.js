@@ -7,8 +7,13 @@ const UserCourses = () => {
     
     const [courses, setCourses] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [enrolledCourses, setEnrolledCoures] = useState(null);
 
     useEffect(() => {
+        let user = localStorage.getItem("user");
+        if(user === null) {
+            navigate("/user/login");
+        }
         const fetchData = async () => {
             setLoading(true);
             try {
@@ -32,6 +37,20 @@ const UserCourses = () => {
     const dashboard = (e) => {
         navigate("/user/homepage");
     };
+    const enroll = (e, id) => {
+        e.preventDefault();
+        UserService.enrollCourse(id)
+        .then(
+            (response) => {
+                setEnrolledCoures(response.data);
+            }
+        )
+        .catch(
+            (error) => {
+                console.log(error);
+            }
+        );
+    };
     return (
         <div>
             <nav>
@@ -52,6 +71,7 @@ const UserCourses = () => {
                                     <td>{course.description}</td>
                                     <td>{course.creator}</td>
                                     <td>{course.estimatedTime}</td>
+                                    <td><button onClick={(e, id) => enroll(e, course.id)}>Enroll</button></td>
                                 </tr>
                             )
                         )
